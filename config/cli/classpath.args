@@ -36,6 +36,7 @@ bin/classes/lwjgl/spvc:\
 bin/classes/lwjgl/stb:\
 bin/classes/lwjgl/tinyexr:\
 bin/classes/lwjgl/tinyfd:\
+bin/classes/lwjgl/ultralight:\
 bin/classes/lwjgl/vma:\
 bin/classes/lwjgl/vulkan:\
 bin/classes/lwjgl/xxhash:\

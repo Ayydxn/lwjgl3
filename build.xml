@@ -544,6 +544,7 @@
             <compileBinding binding="stb"/>
             <compileBinding binding="tinyexr"/>
             <compileBinding binding="tinyfd"/>
+            <compileBinding binding="ultralight"/>
             <compileBinding binding="vulkan"/>
             <compileBinding binding="xxhash"/>
             <compileBinding binding="yoga"/>
@@ -831,6 +832,14 @@
             </and>
         </condition>
 
+        <local name="test.ultralight"/>
+        <condition property="test.ultralight">
+            <and>
+                <istrue value="${binding.glfw}"/>
+                <istrue value="${binding.ultralight}"/>
+            </and>
+        </condition>
+
         <local name="test.vulkan"/>
         <condition property="test.vulkan">
             <and>
@@ -930,6 +939,7 @@
 	            <include name="org/lwjgl/demo/util/yoga/**" if:set="test.yoga"/>
 	            <include name="org/lwjgl/demo/util/zstd/**" if:true="${binding.zstd}"/>
 
+                <include name="org/lwjgl/demo/ultralight/**" if:set="test.ultralight"/>
 	            <include name="org/lwjgl/demo/vulkan/**" if:set="test.vulkan"/>
 
 	            <!-- Benchmarks -->
@@ -2032,6 +2042,9 @@
 
         <!-- tiny file dialogs -->
         <release-module name="tinyfd" native-library="lwjgl_tinyfd" title="tiny file dialogs" if:true="${binding.tinyfd}"/>
+
+        <!-- Ultralight -->
+        <release-module name="ultralight" title="Ultralight" if:true="${binding.ultralight}"/>
 
         <!-- Vulkan Memory Allocator -->
         <release-module name="vma" native-library="lwjgl_vma" title="vma" if:true="${binding.vma}"/>

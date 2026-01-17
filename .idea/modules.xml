@@ -2,19 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <!-- Exposes the repository root -->
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/root.iml" filepath="$PROJECT_DIR$/.idea/modules/root.iml" />
-
-      <!-- Custom Ant tasks -->
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Root.iml" filepath="$PROJECT_DIR$/.idea/modules/Root.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ant.iml" filepath="$PROJECT_DIR$/.idea/modules/ant.iml" />
-
-      <!-- The code generator -->
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extract.iml" filepath="$PROJECT_DIR$/.idea/modules/extract.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/generator.iml" filepath="$PROJECT_DIR$/.idea/modules/generator.iml" />
-
-      <!-- The code generator templates -->
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/templates.iml" filepath="$PROJECT_DIR$/.idea/modules/templates.iml" />
-
-      <!-- The LWJGL library (includes generated code) -->
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.assimp.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.assimp.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.bgfx.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.bgfx.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.core.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.core.iml" />
@@ -56,18 +47,15 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.stb.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.stb.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.tinyexr.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.tinyexr.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.tinyfd.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.tinyfd.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.ultralight.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.ultralight.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.vma.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.vma.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.vulkan.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.vulkan.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.xxhash.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.xxhash.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.yoga.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.yoga.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.zstd.iml" filepath="$PROJECT_DIR$/.idea/modules/lwjgl/lwjgl.zstd.iml" />
-
-      <!-- The tool that extracts generator templates from native headers -->
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extract.iml" filepath="$PROJECT_DIR$/.idea/modules/extract.iml" />
-
-      <!-- The LWJGL demo & benchmarking suite -->
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples/samples.samples25.iml" filepath="$PROJECT_DIR$/.idea/modules/samples/samples.samples25.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples/samples.samples.iml" filepath="$PROJECT_DIR$/.idea/modules/samples/samples.samples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples/samples.samples25.iml" filepath="$PROJECT_DIR$/.idea/modules/samples/samples.samples25.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/templates.iml" filepath="$PROJECT_DIR$/.idea/modules/templates.iml" />
     </modules>
   </component>
 </project>
