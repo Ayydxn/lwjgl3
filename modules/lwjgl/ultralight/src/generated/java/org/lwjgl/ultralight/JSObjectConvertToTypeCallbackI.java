@@ -22,7 +22,7 @@ public interface JSObjectConvertToTypeCallbackI extends CallbackI {
         MethodHandles.lookup(),
         apiCreateCIF(
             ffi_type_pointer,
-            ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer
+            ffi_type_pointer, ffi_type_pointer, ffi_type_uint32, ffi_type_pointer
         )
     );
 
@@ -34,13 +34,13 @@ public interface JSObjectConvertToTypeCallbackI extends CallbackI {
         long __result = invoke(
             memGetAddress(memGetAddress(args)),
             memGetAddress(memGetAddress(args + POINTER_SIZE)),
-            memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
+            memGetInt(memGetAddress(args + 2 * POINTER_SIZE)),
             memGetAddress(memGetAddress(args + 3 * POINTER_SIZE))
         );
         apiClosureRetP(ret, __result);
     }
 
-    /** {@code OpaqueJSValue const * (* JSObjectConvertToTypeCallback) (OpaqueJSContext const * context, OpaqueJSValue * object, JSType * type, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue const *") long invoke(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("JSType *") long type, @NativeType("OpaqueJSValue const *") long exception);
+    /** {@code OpaqueJSValue const * (* JSObjectConvertToTypeCallback) (OpaqueJSContext const * context, OpaqueJSValue * object, JSType type, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue const *") long invoke(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("JSType") int type, @NativeType("OpaqueJSValue const *") long exception);
 
 }

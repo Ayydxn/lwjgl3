@@ -56,7 +56,7 @@ public abstract class JSObjectConvertToTypeCallback extends Callback implements 
         }
 
         @Override
-        public long invoke(long context, long object, long type, long exception) {
+        public long invoke(long context, long object, int type, long exception) {
             return delegate.invoke(context, object, type, exception);
         }
 

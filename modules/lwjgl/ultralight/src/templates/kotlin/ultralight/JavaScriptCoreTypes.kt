@@ -4,19 +4,13 @@
  */
 package ultralight
 
-import org.lwjgl.generator.Module
-import org.lwjgl.generator.bool
-import org.lwjgl.generator.charASCII
-import org.lwjgl.generator.enumType
-import org.lwjgl.generator.int
-import org.lwjgl.generator.opaque
-import org.lwjgl.generator.opaque_p
-import org.lwjgl.generator.rangeTo
-import org.lwjgl.generator.size_t
-import org.lwjgl.generator.struct
-import org.lwjgl.generator.typedef
-import org.lwjgl.generator.unsigned_int
-import org.lwjgl.generator.void
+import org.lwjgl.generator.*
+
+val WEBCORE_BINDING = simpleBinding(
+    Module.ULTRALIGHT,
+    libraryName = "WebCore",
+    bundledWithLWJGL = false
+)
 
 val JSContextGroupRef = "OpaqueJSContextGroup".opaque.const
 val JSContextRef = "OpaqueJSContext".opaque.const
@@ -27,8 +21,10 @@ val JSPropertyNameArrayRef = "OpaqueJSPropertyNameArray".opaque
 val JSPropertyNameAccumulatorRef = "OpaqueJSPropertyNameAccumulator".opaque
 val JSValueRef = "OpaqueJSValue".opaque.const
 val JSObjectRef = "OpaqueJSValue".opaque
+val JSChar = typedef(unsigned_short, "JSChar")
 
 val JSType = "JSType".enumType
+val JSTypedArrayType = "JSTypedArrayType".enumType
 
 val JSPropertyAttributes = typedef(unsigned_int, "JSPropertyAttributes")
 val JSClassAttributes = typedef(unsigned_int, "JSClassAttributes")
@@ -129,8 +125,9 @@ val JSObjectGetPropertyNamesCallback = Module.ULTRALIGHT.callback {
     )
 }
 
+// TODO: (Ayydxn) Fix and properly add arguments array
 val JSObjectCallAsFunctionCallback = Module.ULTRALIGHT.callback {
-    void(
+    JSValueRef.p(
         className = "JSObjectCallAsFunctionCallback",
 
         JSContextRef.p("context"),
@@ -143,6 +140,7 @@ val JSObjectCallAsFunctionCallback = Module.ULTRALIGHT.callback {
     )
 }
 
+// TODO: (Ayydxn) Fix and properly add arguments array
 val JSObjectCallAsConstructorCallback = Module.ULTRALIGHT.callback {
     JSObjectRef.p(
         className = "JSObjectCallAsConstructorCallback",
@@ -175,7 +173,7 @@ val JSObjectConvertToTypeCallback = Module.ULTRALIGHT.callback {
 
         JSContextRef.p("context"),
         JSObjectRef.p("object"),
-        JSType.p("type"),
+        JSType("type"),
         JSValueRef.p("exception"),
 
         nativeType = "JSObjectConvertToTypeCallback"
@@ -216,6 +214,6 @@ val JSClassDefinition = struct(Module.ULTRALIGHT, className = "JSClassDefinition
     JSObjectCallAsConstructorCallback.p("callAsConstructor")
     JSObjectHasInstanceCallback.p("hasInstance")
     JSObjectConvertToTypeCallback.p("convertToType")
-
-    // TODO: (Ayydxn) Continue binding JSObjectRef.h (continue from after JSClassDefinition)
 }
+
+// TODO: (Ayydxn) JS_EXPORT extern const JSClassDefinition kJSClassDefinitionEmpty;

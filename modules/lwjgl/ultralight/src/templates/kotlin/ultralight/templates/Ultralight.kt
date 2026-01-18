@@ -1101,7 +1101,10 @@ val ULTRALIGHT = "Ultralight".nativeClass(Module.ULTRALIGHT, "Ultralight", prefi
         unsigned_int("height")
     )
 
-    // TODO: (Ayydxn) Add ulViewLockJSContext
+    JSContextRef.p(
+        "ViewLockJSContext",
+        ULView.p("view")
+    )
 
     void(
         "ViewUnlockJSContext",
@@ -1242,8 +1245,9 @@ val ULTRALIGHT = "Ultralight".nativeClass(Module.ULTRALIGHT, "Ultralight", prefi
 
     void(
         "ViewSetDOMReadyCallback",
+        ULView.p("view"),
         ULDOMReadyCallback("callback"),
-        opaque_p("userData")
+        nullable..opaque_p("userData")
     )
 
     void(

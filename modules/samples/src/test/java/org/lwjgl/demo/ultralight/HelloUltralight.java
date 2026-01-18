@@ -11,6 +11,7 @@ import java.net.*;
 import java.util.*;
 
 import static org.lwjgl.ultralight.AppCore.*;
+import static org.lwjgl.ultralight.JavaScriptCore.*;
 import static org.lwjgl.ultralight.Ultralight.*;
 
 public class HelloUltralight {
@@ -28,6 +29,10 @@ public class HelloUltralight {
         "    <h1>TEST - Can you see this?</h1>" +
         "    <p>If you see this text, Ultralight is working!</p>" +
         "</body>" +
+        "<body>\n" +
+        "    <button onclick=\"OnButtonClick();\">Click Me</button>\n" +
+        "    <div id=\"result\"></div>\n" +
+        "  </body>" +
         "</html>";
 
     private HelloUltralight() {
@@ -62,6 +67,40 @@ public class HelloUltralight {
 
         ulWindowSetCloseCallback(window, (userData, ulWindow) -> ulAppQuit(app), MemoryUtil.NULL);
 
+        ulViewSetDOMReadyCallback(overlayView, (userData, caller, frameID, isMainFrame, url) ->
+        {
+            System.out.println("DOM is Ready!");
+
+            if (!isMainFrame)
+                return;
+
+            long scopedContext = ulViewLockJSContext(caller);
+            long name = JSStringCreateWithUTF8CString("OnButtonClick");
+
+            long func = JSObjectMakeFunctionWithCallback(scopedContext, name, (context, function, thisObject, argumentCount, exception) ->
+            {
+                System.out.println("Hi from the button!");
+
+                String str = "document.getElementById('result').innerText = 'Ultralight rocks!'";
+
+                // Create our string of JavaScript
+                long script = JSStringCreateWithUTF8CString(str);
+
+                // Execute it with JSEvaluateScript, ignoring other parameters for now
+                JSEvaluateScript(context, script, MemoryUtil.NULL, MemoryUtil.NULL, 0, MemoryUtil.NULL);
+
+                // Release our string (we only Release what we Create)
+                JSStringRelease(script);
+
+                return JSValueMakeNull(context);
+            });
+
+            long globalObject = JSContextGetGlobalContext(scopedContext);
+
+            JSObjectSetProperty(scopedContext, globalObject, name, func, null, MemoryUtil.NULL);
+
+            JSStringRelease(name);
+        }, MemoryUtil.NULL);
         ulAppRun(app);
     }
 }

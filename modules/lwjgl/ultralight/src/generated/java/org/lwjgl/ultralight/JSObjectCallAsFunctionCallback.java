@@ -56,8 +56,8 @@ public abstract class JSObjectCallAsFunctionCallback extends Callback implements
         }
 
         @Override
-        public void invoke(long context, long function, long thisObject, long argumentCount, long exception) {
-            delegate.invoke(context, function, thisObject, argumentCount, exception);
+        public long invoke(long context, long function, long thisObject, long argumentCount, long exception) {
+            return delegate.invoke(context, function, thisObject, argumentCount, exception);
         }
 
     }

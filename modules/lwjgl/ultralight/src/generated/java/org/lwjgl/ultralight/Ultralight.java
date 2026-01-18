@@ -182,6 +182,7 @@ public class Ultralight {
             ViewLoadHTML                         = apiGetFunctionAddress(ULTRALIGHT, "ulViewLoadHTML"),
             ViewLoadURL                          = apiGetFunctionAddress(ULTRALIGHT, "ulViewLoadURL"),
             ViewResize                           = apiGetFunctionAddress(ULTRALIGHT, "ulViewResize"),
+            ViewLockJSContext                    = apiGetFunctionAddress(ULTRALIGHT, "ulViewLockJSContext"),
             ViewUnlockJSContext                  = apiGetFunctionAddress(ULTRALIGHT, "ulViewUnlockJSContext"),
             ViewEvaluateScript                   = apiGetFunctionAddress(ULTRALIGHT, "ulViewEvaluateScript"),
             ViewCanGoBack                        = apiGetFunctionAddress(ULTRALIGHT, "ulViewCanGoBack"),
@@ -2356,6 +2357,18 @@ public class Ultralight {
         invokePV(view, width, height, __functionAddress);
     }
 
+    // --- [ ulViewLockJSContext ] ---
+
+    /** {@code OpaqueJSContext const * ulViewLockJSContext(C_View * view)} */
+    @NativeType("OpaqueJSContext const *")
+    public static long ulViewLockJSContext(@NativeType("C_View *") long view) {
+        long __functionAddress = Functions.ViewLockJSContext;
+        if (CHECKS) {
+            check(view);
+        }
+        return invokePP(view, __functionAddress);
+    }
+
     // --- [ ulViewUnlockJSContext ] ---
 
     /** {@code void ulViewUnlockJSContext(C_View * view)} */
@@ -2686,18 +2699,18 @@ public class Ultralight {
 
     // --- [ ulViewSetDOMReadyCallback ] ---
 
-    /** {@code void ulViewSetDOMReadyCallback(ULDOMReadyCallback callback, void * userData)} */
-    public static void nulViewSetDOMReadyCallback(long callback, long userData) {
+    /** {@code void ulViewSetDOMReadyCallback(C_View * view, ULDOMReadyCallback callback, void * userData)} */
+    public static void nulViewSetDOMReadyCallback(long view, long callback, long userData) {
         long __functionAddress = Functions.ViewSetDOMReadyCallback;
         if (CHECKS) {
-            check(userData);
+            check(view);
         }
-        invokePPV(callback, userData, __functionAddress);
+        invokePPPV(view, callback, userData, __functionAddress);
     }
 
-    /** {@code void ulViewSetDOMReadyCallback(ULDOMReadyCallback callback, void * userData)} */
-    public static void ulViewSetDOMReadyCallback(@NativeType("ULDOMReadyCallback") ULDOMReadyCallbackI callback, @NativeType("void *") long userData) {
-        nulViewSetDOMReadyCallback(callback.address(), userData);
+    /** {@code void ulViewSetDOMReadyCallback(C_View * view, ULDOMReadyCallback callback, void * userData)} */
+    public static void ulViewSetDOMReadyCallback(@NativeType("C_View *") long view, @NativeType("ULDOMReadyCallback") ULDOMReadyCallbackI callback, @NativeType("void *") long userData) {
+        nulViewSetDOMReadyCallback(view, callback.address(), userData);
     }
 
     // --- [ ulViewSetUpdateHistoryCallback ] ---
