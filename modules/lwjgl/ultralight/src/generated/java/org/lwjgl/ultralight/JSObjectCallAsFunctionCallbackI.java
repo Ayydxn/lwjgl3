@@ -22,7 +22,7 @@ public interface JSObjectCallAsFunctionCallbackI extends CallbackI {
         MethodHandles.lookup(),
         apiCreateCIF(
             ffi_type_pointer,
-            ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer
+            ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer
         )
     );
 
@@ -36,12 +36,13 @@ public interface JSObjectCallAsFunctionCallbackI extends CallbackI {
             memGetAddress(memGetAddress(args + POINTER_SIZE)),
             memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
             memGetAddress(memGetAddress(args + 3 * POINTER_SIZE)),
-            memGetAddress(memGetAddress(args + 4 * POINTER_SIZE))
+            memGetAddress(memGetAddress(args + 4 * POINTER_SIZE)),
+            memGetAddress(memGetAddress(args + 5 * POINTER_SIZE))
         );
         apiClosureRetP(ret, __result);
     }
 
-    /** {@code OpaqueJSValue const * (* JSObjectCallAsFunctionCallback) (OpaqueJSContext const * context, OpaqueJSValue * function, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue const *") long invoke(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long function, @NativeType("OpaqueJSValue *") long thisObject, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long exception);
+    /** {@code OpaqueJSValue const * (* JSObjectCallAsFunctionCallback) (OpaqueJSContext const * context, OpaqueJSValue * function, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue const *") long invoke(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long function, @NativeType("OpaqueJSValue *") long thisObject, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const **") long arguments, @NativeType("OpaqueJSValue const *") long exception);
 
 }

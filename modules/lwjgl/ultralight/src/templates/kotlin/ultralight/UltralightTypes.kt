@@ -683,14 +683,14 @@ val ULFontLoader = struct(Module.ULTRALIGHT, className = "ULFileSystem") {
     ULFontLoaderLoad("load")
 }
 
-// FIXME: (Ayydxn) Ultralight single-byte alings this. Fix this if it not being so causes any problems.
+// (Ayydxn) Ultralight single-byte alings this. If this not being causes any issues, we need to fix that.
 val ULVertex2F4UB2F = struct(Module.ULTRALIGHT, className = "ULVertex2F4UB2F", nativeName = "ULVertex_2f_4ub_2f") {
     float("pos")[2]
     unsigned_char("color")[4]
     float("obj")[2]
 }
 
-// FIXME: (Ayydxn) Ultralight single-byte alings this. Fix this if it not being so causes any problems.
+// (Ayydxn) Ultralight single-byte alings this. If this not being causes any issues, we need to fix that.
 val ULVertex2F4UB2F2F28F = struct(Module.ULTRALIGHT, className = "ULVertex2F4UB2F", nativeName = "ULVertex_2f_4ub_2f_2f_28f") {
     float("pos")[2]
     unsigned_char("color")[4]

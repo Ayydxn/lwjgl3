@@ -4,6 +4,7 @@
  */
 package org.lwjgl.demo.ultralight;
 
+import org.lwjgl.*;
 import org.lwjgl.system.*;
 
 import java.io.*;
@@ -77,7 +78,7 @@ public class HelloUltralight {
             long scopedContext = ulViewLockJSContext(caller);
             long name = JSStringCreateWithUTF8CString("OnButtonClick");
 
-            long func = JSObjectMakeFunctionWithCallback(scopedContext, name, (context, function, thisObject, argumentCount, exception) ->
+            long func = JSObjectMakeFunctionWithCallback(scopedContext, name, (context, function, thisObject, argumentCount, arguments, exception) ->
             {
                 System.out.println("Hi from the button!");
 
@@ -101,6 +102,7 @@ public class HelloUltralight {
 
             JSStringRelease(name);
         }, MemoryUtil.NULL);
+
         ulAppRun(app);
     }
 }

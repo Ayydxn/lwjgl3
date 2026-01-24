@@ -5,6 +5,7 @@
 package ultralight.templates
 
 import org.lwjgl.generator.*
+import sdl.wchar_t
 import ultralight.*
 
 val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMethod = "JS", prefixConstant = "", binding = WEBCORE_BINDING) {
@@ -54,8 +55,8 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
         "EvaluateScript",
         JSContextRef.p("context"),
         JSStringRef.p("script"),
-        JSObjectRef.p("thisObject"),
-        JSStringRef.p("sourceURL"),
+        nullable..JSObjectRef.p("thisObject"),
+        nullable..JSStringRef.p("sourceURL"),
         int("startingLineNumber"),
         nullable..JSValueRef.p("exception")
     )
@@ -183,39 +184,35 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
         JSObjectCallAsFunctionCallback("callAsFunction")
     )
 
-    // TODO: (Ayydxn) Fix and properly add arguments array
     JSObjectRef.p(
         "ObjectMakeArray",
         JSContextRef.p("context"),
-        size_t("argumentCount"),
-        JSValueRef.p("arguments"),
+        AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         nullable..JSValueRef.p("exception")
     )
 
-    // TODO: (Ayydxn) Fix and properly add arguments array
     JSObjectRef.p(
         "ObjectMakeDate",
         JSContextRef.p("context"),
-        size_t("argumentCount"),
-        JSValueRef.p("arguments"),
+        AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         nullable..JSValueRef.p("exception")
     )
 
-    // TODO: (Ayydxn) Fix and properly add arguments array
     JSObjectRef.p(
         "ObjectMakeError",
         JSContextRef.p("context"),
-        size_t("argumentCount"),
-        JSValueRef.p("arguments"),
+        AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         nullable..JSValueRef.p("exception")
     )
 
-    // TODO: (Ayydxn) Fix and properly add arguments array
     JSObjectRef.p(
         "ObjectMakeRegExp",
         JSContextRef.p("context"),
-        size_t("argumentCount"),
-        JSValueRef.p("arguments"),
+        AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         nullable..JSValueRef.p("exception")
     )
 
@@ -227,13 +224,12 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
         nullable..JSValueRef.p("exception")
     )
 
-    // TODO: (Ayydxn) Fix and properly add parameter names array
     JSObjectRef.p(
         "ObjectMakeFunction",
         JSContextRef.p("context"),
         JSStringRef.p("name"),
-        unsigned("parameterCount"),
-        JSStringRef.const.p("parameterNames"),
+        AutoSize("parameterNames")..size_t("parameterCount"),
+        PointerArray(JSValueRef.p, "parameterName")..JSValueRef.p.p("parameterNames"),
         JSStringRef.p("body"),
         JSStringRef.p("sourceURL"),
         int("startingLineNumber"),
@@ -271,10 +267,10 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
     void(
         "ObjectSetProperty",
         JSContextRef.p("context"),
-        JSObjectRef.p("objecty"),
+        JSObjectRef.p("object"),
         JSStringRef.p("propertyName"),
         JSValueRef.p("value"),
-        Unsafe..JSPropertyAttributes.p("attributes"),
+        Unsafe..nullable..JSPropertyAttributes.p("attributes"),
         nullable..JSValueRef.p("exception"),
     )
 
@@ -346,14 +342,13 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
         JSObjectRef.p("object")
     )
 
-    // TODO: (Ayydxn) Fix and properly add arguments array
     JSValueRef.p(
         "ObjectCallAsFunction",
         JSContextRef.p("context"),
         JSObjectRef.p("object"),
         JSObjectRef.p("thisObject"),
-        size_t("argumentCount"),
-        JSValueRef.p("arguments"),
+        AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         nullable..JSValueRef.p("exception")
     )
 
@@ -363,24 +358,18 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
         JSObjectRef.p("object")
     )
 
-    // TODO: (Ayydxn) Fix and properly add arguments array
     JSObjectRef.p(
         "ObjectCallAsConstructor",
         JSContextRef.p("context"),
         JSObjectRef.p("object"),
-        size_t("argumentCount"),
-        JSValueRef.p("arguments"),
+        AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments")
     )
 
     JSPropertyNameArrayRef.p(
         "ObjectCopyPropertyNames",
         JSContextRef.p("context"),
         JSObjectRef.p("object")
-    )
-
-    JSPropertyNameArrayRef.p(
-        "PropertyNameArrayRefRetain",
-        JSPropertyNameArrayRef.p("array")
     )
 
     void(
@@ -467,11 +456,10 @@ val JAVASCRIPT_CORE = "JavaScriptCore".nativeClass(Module.ULTRALIGHT, prefixMeth
         JSStringRef.p("string")
     )
 
-    // TODO: (Ayydxn) Investivate and fix
-    //JSChar.p(
-    //    "StringGetCharactersPtr",
-    //    JSStringRef.p("string")
-    //)
+    JSChar.const.p(
+        "StringGetCharactersPtr",
+        JSStringRef.p("string")
+    )
 
     size_t(
         "StringGetMaximumUTF8CStringSize",

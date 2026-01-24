@@ -56,8 +56,8 @@ public abstract class JSObjectCallAsConstructorCallback extends Callback impleme
         }
 
         @Override
-        public long invoke(long context, long constructor, long argumentCount, long exception) {
-            return delegate.invoke(context, constructor, argumentCount, exception);
+        public long invoke(long context, long constructor, long argumentCount, long arguments, long exception) {
+            return delegate.invoke(context, constructor, argumentCount, arguments, exception);
         }
 
     }

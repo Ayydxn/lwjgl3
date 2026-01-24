@@ -22,7 +22,7 @@ public interface JSObjectCallAsConstructorCallbackI extends CallbackI {
         MethodHandles.lookup(),
         apiCreateCIF(
             ffi_type_pointer,
-            ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer
+            ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer, ffi_type_pointer
         )
     );
 
@@ -35,12 +35,13 @@ public interface JSObjectCallAsConstructorCallbackI extends CallbackI {
             memGetAddress(memGetAddress(args)),
             memGetAddress(memGetAddress(args + POINTER_SIZE)),
             memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
-            memGetAddress(memGetAddress(args + 3 * POINTER_SIZE))
+            memGetAddress(memGetAddress(args + 3 * POINTER_SIZE)),
+            memGetAddress(memGetAddress(args + 4 * POINTER_SIZE))
         );
         apiClosureRetP(ret, __result);
     }
 
-    /** {@code OpaqueJSValue * (* JSObjectCallAsConstructorCallback) (OpaqueJSContext const * context, OpaqueJSValue * constructor, size_t argumentCount, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue *") long invoke(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long constructor, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long exception);
+    /** {@code OpaqueJSValue * (* JSObjectCallAsConstructorCallback) (OpaqueJSContext const * context, OpaqueJSValue * constructor, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *") long invoke(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long constructor, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const **") long arguments, @NativeType("OpaqueJSValue const *") long exception);
 
 }

@@ -5,7 +5,11 @@
  */
 package org.lwjgl.ultralight;
 
+import org.jspecify.annotations.*;
+
 import java.nio.*;
+
+import org.lwjgl.*;
 
 import org.lwjgl.system.*;
 
@@ -72,7 +76,6 @@ public class JavaScriptCore {
             ObjectIsConstructor                          = apiGetFunctionAddress(WEBCORE, "JSObjectIsConstructor"),
             ObjectCallAsConstructor                      = apiGetFunctionAddress(WEBCORE, "JSObjectCallAsConstructor"),
             ObjectCopyPropertyNames                      = apiGetFunctionAddress(WEBCORE, "JSObjectCopyPropertyNames"),
-            PropertyNameArrayRefRetain                   = apiGetFunctionAddress(WEBCORE, "JSPropertyNameArrayRefRetain"),
             PropertyNameArrayRelease                     = apiGetFunctionAddress(WEBCORE, "JSPropertyNameArrayRelease"),
             PropertyNameArrayGetCount                    = apiGetFunctionAddress(WEBCORE, "JSPropertyNameArrayGetCount"),
             PropertyNameArrayGetNameAtIndex              = apiGetFunctionAddress(WEBCORE, "JSPropertyNameArrayGetNameAtIndex"),
@@ -87,6 +90,7 @@ public class JavaScriptCore {
             StringRetain                                 = apiGetFunctionAddress(WEBCORE, "JSStringRetain"),
             StringRelease                                = apiGetFunctionAddress(WEBCORE, "JSStringRelease"),
             StringGetLength                              = apiGetFunctionAddress(WEBCORE, "JSStringGetLength"),
+            StringGetCharactersPtr                       = apiGetFunctionAddress(WEBCORE, "JSStringGetCharactersPtr"),
             StringGetMaximumUTF8CStringSize              = apiGetFunctionAddress(WEBCORE, "JSStringGetMaximumUTF8CStringSize"),
             StringGetUTF8CString                         = apiGetFunctionAddress(WEBCORE, "JSStringGetUTF8CString"),
             StringIsEqual                                = apiGetFunctionAddress(WEBCORE, "JSStringIsEqual"),
@@ -186,8 +190,6 @@ public class JavaScriptCore {
         if (CHECKS) {
             check(context);
             check(script);
-            check(thisObject);
-            check(sourceURL);
         }
         return invokePPPPPP(context, script, thisObject, sourceURL, startingLineNumber, exception, __functionAddress);
     }
@@ -455,54 +457,166 @@ public class JavaScriptCore {
 
     // --- [ JSObjectMakeArray ] ---
 
-    /** {@code OpaqueJSValue * JSObjectMakeArray(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const * arguments, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue *")
-    public static long JSObjectMakeArray(@NativeType("OpaqueJSContext const *") long context, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long arguments, @NativeType("OpaqueJSValue const *") long exception) {
+    /** {@code OpaqueJSValue * JSObjectMakeArray(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    public static long nJSObjectMakeArray(long context, long argumentCount, long arguments, long exception) {
         long __functionAddress = Functions.ObjectMakeArray;
         if (CHECKS) {
             check(context);
-            check(arguments);
         }
         return invokePPPPP(context, argumentCount, arguments, exception, __functionAddress);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeArray(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeArray(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") PointerBuffer arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        return nJSObjectMakeArray(context, arguments.remaining(), memAddress(arguments), exception);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeArray(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeArray(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long[] arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, arguments);
+            return nJSObjectMakeArray(context, arguments.length, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeArray(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeArray(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long argument, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, argument);
+            return nJSObjectMakeArray(context, 1, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSObjectMakeDate ] ---
 
-    /** {@code OpaqueJSValue * JSObjectMakeDate(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const * arguments, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue *")
-    public static long JSObjectMakeDate(@NativeType("OpaqueJSContext const *") long context, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long arguments, @NativeType("OpaqueJSValue const *") long exception) {
+    /** {@code OpaqueJSValue * JSObjectMakeDate(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    public static long nJSObjectMakeDate(long context, long argumentCount, long arguments, long exception) {
         long __functionAddress = Functions.ObjectMakeDate;
         if (CHECKS) {
             check(context);
-            check(arguments);
         }
         return invokePPPPP(context, argumentCount, arguments, exception, __functionAddress);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeDate(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeDate(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") PointerBuffer arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        return nJSObjectMakeDate(context, arguments.remaining(), memAddress(arguments), exception);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeDate(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeDate(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long[] arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, arguments);
+            return nJSObjectMakeDate(context, arguments.length, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeDate(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeDate(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long argument, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, argument);
+            return nJSObjectMakeDate(context, 1, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSObjectMakeError ] ---
 
-    /** {@code OpaqueJSValue * JSObjectMakeError(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const * arguments, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue *")
-    public static long JSObjectMakeError(@NativeType("OpaqueJSContext const *") long context, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long arguments, @NativeType("OpaqueJSValue const *") long exception) {
+    /** {@code OpaqueJSValue * JSObjectMakeError(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    public static long nJSObjectMakeError(long context, long argumentCount, long arguments, long exception) {
         long __functionAddress = Functions.ObjectMakeError;
         if (CHECKS) {
             check(context);
-            check(arguments);
         }
         return invokePPPPP(context, argumentCount, arguments, exception, __functionAddress);
     }
 
+    /** {@code OpaqueJSValue * JSObjectMakeError(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeError(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") PointerBuffer arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        return nJSObjectMakeError(context, arguments.remaining(), memAddress(arguments), exception);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeError(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeError(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long[] arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, arguments);
+            return nJSObjectMakeError(context, arguments.length, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeError(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeError(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long argument, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, argument);
+            return nJSObjectMakeError(context, 1, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
     // --- [ JSObjectMakeRegExp ] ---
 
-    /** {@code OpaqueJSValue * JSObjectMakeRegExp(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const * arguments, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue *")
-    public static long JSObjectMakeRegExp(@NativeType("OpaqueJSContext const *") long context, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long arguments, @NativeType("OpaqueJSValue const *") long exception) {
+    /** {@code OpaqueJSValue * JSObjectMakeRegExp(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    public static long nJSObjectMakeRegExp(long context, long argumentCount, long arguments, long exception) {
         long __functionAddress = Functions.ObjectMakeRegExp;
         if (CHECKS) {
             check(context);
-            check(arguments);
         }
         return invokePPPPP(context, argumentCount, arguments, exception, __functionAddress);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeRegExp(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeRegExp(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") PointerBuffer arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        return nJSObjectMakeRegExp(context, arguments.remaining(), memAddress(arguments), exception);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeRegExp(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeRegExp(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long[] arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, arguments);
+            return nJSObjectMakeRegExp(context, arguments.length, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeRegExp(OpaqueJSContext const * context, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeRegExp(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue const **") long argument, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, argument);
+            return nJSObjectMakeRegExp(context, 1, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSObjectMakeDeferredPromise ] ---
@@ -521,18 +635,46 @@ public class JavaScriptCore {
 
     // --- [ JSObjectMakeFunction ] ---
 
-    /** {@code OpaqueJSValue * JSObjectMakeFunction(OpaqueJSContext const * context, OpaqueJSString * name, unsigned parameterCount, OpaqueJSString const * parameterNames, OpaqueJSString * body, OpaqueJSString * sourceURL, int startingLineNumber, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue *")
-    public static long JSObjectMakeFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSString *") long name, @NativeType("unsigned") int parameterCount, @NativeType("OpaqueJSString const *") long parameterNames, @NativeType("OpaqueJSString *") long body, @NativeType("OpaqueJSString *") long sourceURL, int startingLineNumber, @NativeType("OpaqueJSValue const *") long exception) {
+    /** {@code OpaqueJSValue * JSObjectMakeFunction(OpaqueJSContext const * context, OpaqueJSString * name, size_t parameterCount, OpaqueJSValue const ** parameterNames, OpaqueJSString * body, OpaqueJSString * sourceURL, int startingLineNumber, OpaqueJSValue const * exception)} */
+    public static long nJSObjectMakeFunction(long context, long name, long parameterCount, long parameterNames, long body, long sourceURL, int startingLineNumber, long exception) {
         long __functionAddress = Functions.ObjectMakeFunction;
         if (CHECKS) {
             check(context);
             check(name);
-            check(parameterNames);
             check(body);
             check(sourceURL);
         }
-        return invokePPPPPPP(context, name, parameterCount, parameterNames, body, sourceURL, startingLineNumber, exception, __functionAddress);
+        return invokePPPPPPPP(context, name, parameterCount, parameterNames, body, sourceURL, startingLineNumber, exception, __functionAddress);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeFunction(OpaqueJSContext const * context, OpaqueJSString * name, size_t parameterCount, OpaqueJSValue const ** parameterNames, OpaqueJSString * body, OpaqueJSString * sourceURL, int startingLineNumber, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSString *") long name, @NativeType("OpaqueJSValue const **") PointerBuffer parameterNames, @NativeType("OpaqueJSString *") long body, @NativeType("OpaqueJSString *") long sourceURL, int startingLineNumber, @NativeType("OpaqueJSValue const *") long exception) {
+        return nJSObjectMakeFunction(context, name, parameterNames.remaining(), memAddress(parameterNames), body, sourceURL, startingLineNumber, exception);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeFunction(OpaqueJSContext const * context, OpaqueJSString * name, size_t parameterCount, OpaqueJSValue const ** parameterNames, OpaqueJSString * body, OpaqueJSString * sourceURL, int startingLineNumber, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSString *") long name, @NativeType("OpaqueJSValue const **") long[] parameterNames, @NativeType("OpaqueJSString *") long body, @NativeType("OpaqueJSString *") long sourceURL, int startingLineNumber, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long parameterNamesAddress = org.lwjgl.system.APIUtil.apiArray(stack, parameterNames);
+            return nJSObjectMakeFunction(context, name, parameterNames.length, parameterNamesAddress, body, sourceURL, startingLineNumber, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue * JSObjectMakeFunction(OpaqueJSContext const * context, OpaqueJSString * name, size_t parameterCount, OpaqueJSValue const ** parameterNames, OpaqueJSString * body, OpaqueJSString * sourceURL, int startingLineNumber, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectMakeFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSString *") long name, @NativeType("OpaqueJSValue const **") long parameterName, @NativeType("OpaqueJSString *") long body, @NativeType("OpaqueJSString *") long sourceURL, int startingLineNumber, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long parameterNamesAddress = org.lwjgl.system.APIUtil.apiArray(stack, parameterName);
+            return nJSObjectMakeFunction(context, name, 1, parameterNamesAddress, body, sourceURL, startingLineNumber, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSObjectGetPrototype ] ---
@@ -591,21 +733,21 @@ public class JavaScriptCore {
 
     // --- [ JSObjectSetProperty ] ---
 
-    /** {@code void JSObjectSetProperty(OpaqueJSContext const * context, OpaqueJSValue * objecty, OpaqueJSString * propertyName, OpaqueJSValue const * value, JSPropertyAttributes * attributes, OpaqueJSValue const * exception)} */
-    public static void nJSObjectSetProperty(long context, long objecty, long propertyName, long value, long attributes, long exception) {
+    /** {@code void JSObjectSetProperty(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSString * propertyName, OpaqueJSValue const * value, JSPropertyAttributes * attributes, OpaqueJSValue const * exception)} */
+    public static void nJSObjectSetProperty(long context, long object, long propertyName, long value, long attributes, long exception) {
         long __functionAddress = Functions.ObjectSetProperty;
         if (CHECKS) {
             check(context);
-            check(objecty);
+            check(object);
             check(propertyName);
             check(value);
         }
-        invokePPPPPPV(context, objecty, propertyName, value, attributes, exception, __functionAddress);
+        invokePPPPPPV(context, object, propertyName, value, attributes, exception, __functionAddress);
     }
 
-    /** {@code void JSObjectSetProperty(OpaqueJSContext const * context, OpaqueJSValue * objecty, OpaqueJSString * propertyName, OpaqueJSValue const * value, JSPropertyAttributes * attributes, OpaqueJSValue const * exception)} */
-    public static void JSObjectSetProperty(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long objecty, @NativeType("OpaqueJSString *") long propertyName, @NativeType("OpaqueJSValue const *") long value, @NativeType("JSPropertyAttributes *") IntBuffer attributes, @NativeType("OpaqueJSValue const *") long exception) {
-        nJSObjectSetProperty(context, objecty, propertyName, value, memAddress(attributes), exception);
+    /** {@code void JSObjectSetProperty(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSString * propertyName, OpaqueJSValue const * value, JSPropertyAttributes * attributes, OpaqueJSValue const * exception)} */
+    public static void JSObjectSetProperty(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSString *") long propertyName, @NativeType("OpaqueJSValue const *") long value, @NativeType("JSPropertyAttributes *") @Nullable IntBuffer attributes, @NativeType("OpaqueJSValue const *") long exception) {
+        nJSObjectSetProperty(context, object, propertyName, value, memAddressSafe(attributes), exception);
     }
 
     // --- [ JSObjectDeleteProperty ] ---
@@ -740,17 +882,45 @@ public class JavaScriptCore {
 
     // --- [ JSObjectCallAsFunction ] ---
 
-    /** {@code OpaqueJSValue const * JSObjectCallAsFunction(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const * arguments, OpaqueJSValue const * exception)} */
-    @NativeType("OpaqueJSValue const *")
-    public static long JSObjectCallAsFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue *") long thisObject, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long arguments, @NativeType("OpaqueJSValue const *") long exception) {
+    /** {@code OpaqueJSValue const * JSObjectCallAsFunction(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    public static long nJSObjectCallAsFunction(long context, long object, long thisObject, long argumentCount, long arguments, long exception) {
         long __functionAddress = Functions.ObjectCallAsFunction;
         if (CHECKS) {
             check(context);
             check(object);
             check(thisObject);
-            check(arguments);
         }
         return invokePPPPPPP(context, object, thisObject, argumentCount, arguments, exception, __functionAddress);
+    }
+
+    /** {@code OpaqueJSValue const * JSObjectCallAsFunction(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue const *")
+    public static long JSObjectCallAsFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue *") long thisObject, @NativeType("OpaqueJSValue const **") PointerBuffer arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        return nJSObjectCallAsFunction(context, object, thisObject, arguments.remaining(), memAddress(arguments), exception);
+    }
+
+    /** {@code OpaqueJSValue const * JSObjectCallAsFunction(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue const *")
+    public static long JSObjectCallAsFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue *") long thisObject, @NativeType("OpaqueJSValue const **") long[] arguments, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, arguments);
+            return nJSObjectCallAsFunction(context, object, thisObject, arguments.length, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue const * JSObjectCallAsFunction(OpaqueJSContext const * context, OpaqueJSValue * object, OpaqueJSValue * thisObject, size_t argumentCount, OpaqueJSValue const ** arguments, OpaqueJSValue const * exception)} */
+    @NativeType("OpaqueJSValue const *")
+    public static long JSObjectCallAsFunction(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue *") long thisObject, @NativeType("OpaqueJSValue const **") long argument, @NativeType("OpaqueJSValue const *") long exception) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, argument);
+            return nJSObjectCallAsFunction(context, object, thisObject, 1, argumentsAddress, exception);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSObjectIsConstructor ] ---
@@ -768,16 +938,44 @@ public class JavaScriptCore {
 
     // --- [ JSObjectCallAsConstructor ] ---
 
-    /** {@code OpaqueJSValue * JSObjectCallAsConstructor(OpaqueJSContext const * context, OpaqueJSValue * object, size_t argumentCount, OpaqueJSValue const * arguments)} */
-    @NativeType("OpaqueJSValue *")
-    public static long JSObjectCallAsConstructor(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("size_t") long argumentCount, @NativeType("OpaqueJSValue const *") long arguments) {
+    /** {@code OpaqueJSValue * JSObjectCallAsConstructor(OpaqueJSContext const * context, OpaqueJSValue * object, size_t argumentCount, OpaqueJSValue const ** arguments)} */
+    public static long nJSObjectCallAsConstructor(long context, long object, long argumentCount, long arguments) {
         long __functionAddress = Functions.ObjectCallAsConstructor;
         if (CHECKS) {
             check(context);
             check(object);
-            check(arguments);
         }
         return invokePPPPP(context, object, argumentCount, arguments, __functionAddress);
+    }
+
+    /** {@code OpaqueJSValue * JSObjectCallAsConstructor(OpaqueJSContext const * context, OpaqueJSValue * object, size_t argumentCount, OpaqueJSValue const ** arguments)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectCallAsConstructor(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue const **") PointerBuffer arguments) {
+        return nJSObjectCallAsConstructor(context, object, arguments.remaining(), memAddress(arguments));
+    }
+
+    /** {@code OpaqueJSValue * JSObjectCallAsConstructor(OpaqueJSContext const * context, OpaqueJSValue * object, size_t argumentCount, OpaqueJSValue const ** arguments)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectCallAsConstructor(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue const **") long... arguments) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, arguments);
+            return nJSObjectCallAsConstructor(context, object, arguments.length, argumentsAddress);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    /** {@code OpaqueJSValue * JSObjectCallAsConstructor(OpaqueJSContext const * context, OpaqueJSValue * object, size_t argumentCount, OpaqueJSValue const ** arguments)} */
+    @NativeType("OpaqueJSValue *")
+    public static long JSObjectCallAsConstructor(@NativeType("OpaqueJSContext const *") long context, @NativeType("OpaqueJSValue *") long object, @NativeType("OpaqueJSValue const **") long argument) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            long argumentsAddress = org.lwjgl.system.APIUtil.apiArray(stack, argument);
+            return nJSObjectCallAsConstructor(context, object, 1, argumentsAddress);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSObjectCopyPropertyNames ] ---
@@ -791,18 +989,6 @@ public class JavaScriptCore {
             check(object);
         }
         return invokePPP(context, object, __functionAddress);
-    }
-
-    // --- [ JSPropertyNameArrayRefRetain ] ---
-
-    /** {@code OpaqueJSPropertyNameArray * JSPropertyNameArrayRefRetain(OpaqueJSPropertyNameArray * array)} */
-    @NativeType("OpaqueJSPropertyNameArray *")
-    public static long JSPropertyNameArrayRefRetain(@NativeType("OpaqueJSPropertyNameArray *") long array) {
-        long __functionAddress = Functions.PropertyNameArrayRefRetain;
-        if (CHECKS) {
-            check(array);
-        }
-        return invokePP(array, __functionAddress);
     }
 
     // --- [ JSPropertyNameArrayRelease ] ---
@@ -929,8 +1115,21 @@ public class JavaScriptCore {
 
     /** {@code OpaqueJSString * JSStringCreateWithCharacters(JSChar const * chars, size_t numChars)} */
     @NativeType("OpaqueJSString *")
-    public static long JSStringCreateWithCharacters(@NativeType("JSChar const *") ShortBuffer chars) {
-        return nJSStringCreateWithCharacters(memAddress(chars), chars.remaining());
+    public static long JSStringCreateWithCharacters(@NativeType("JSChar const *") ByteBuffer chars) {
+        return nJSStringCreateWithCharacters(memAddress(chars), Integer.toUnsignedLong(chars.remaining()) >> 1);
+    }
+
+    /** {@code OpaqueJSString * JSStringCreateWithCharacters(JSChar const * chars, size_t numChars)} */
+    @NativeType("OpaqueJSString *")
+    public static long JSStringCreateWithCharacters(@NativeType("JSChar const *") CharSequence chars) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            int charsEncodedLength = stack.nUTF16(chars, false);
+            long charsEncoded = stack.getPointerAddress();
+            return nJSStringCreateWithCharacters(charsEncoded, charsEncodedLength >> 1);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ JSStringCreateWithUTF8CString ] ---
@@ -996,6 +1195,24 @@ public class JavaScriptCore {
             check(string);
         }
         return invokePP(string, __functionAddress);
+    }
+
+    // --- [ JSStringGetCharactersPtr ] ---
+
+    /** {@code JSChar const * JSStringGetCharactersPtr(OpaqueJSString * string)} */
+    public static long nJSStringGetCharactersPtr(long string) {
+        long __functionAddress = Functions.StringGetCharactersPtr;
+        if (CHECKS) {
+            check(string);
+        }
+        return invokePP(string, __functionAddress);
+    }
+
+    /** {@code JSChar const * JSStringGetCharactersPtr(OpaqueJSString * string)} */
+    @NativeType("JSChar const *")
+    public static @Nullable String JSStringGetCharactersPtr(@NativeType("OpaqueJSString *") long string) {
+        long __result = nJSStringGetCharactersPtr(string);
+        return memUTF16Safe(__result);
     }
 
     // --- [ JSStringGetMaximumUTF8CStringSize ] ---

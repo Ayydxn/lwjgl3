@@ -4,7 +4,10 @@
  */
 package ultralight
 
+import core.jni.jlongArray
+import openal.templates.ALC
 import org.lwjgl.generator.*
+import sdl.wchar_t
 
 val WEBCORE_BINDING = simpleBinding(
     Module.ULTRALIGHT,
@@ -21,7 +24,7 @@ val JSPropertyNameArrayRef = "OpaqueJSPropertyNameArray".opaque
 val JSPropertyNameAccumulatorRef = "OpaqueJSPropertyNameAccumulator".opaque
 val JSValueRef = "OpaqueJSValue".opaque.const
 val JSObjectRef = "OpaqueJSValue".opaque
-val JSChar = typedef(unsigned_short, "JSChar")
+val JSChar = typedef(wchar_t, "JSChar")
 
 val JSType = "JSType".enumType
 val JSTypedArrayType = "JSTypedArrayType".enumType
@@ -125,7 +128,6 @@ val JSObjectGetPropertyNamesCallback = Module.ULTRALIGHT.callback {
     )
 }
 
-// TODO: (Ayydxn) Fix and properly add arguments array
 val JSObjectCallAsFunctionCallback = Module.ULTRALIGHT.callback {
     JSValueRef.p(
         className = "JSObjectCallAsFunctionCallback",
@@ -134,13 +136,13 @@ val JSObjectCallAsFunctionCallback = Module.ULTRALIGHT.callback {
         JSObjectRef.p("function"),
         JSObjectRef.p("thisObject"),
         AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         JSValueRef.p("exception"),
 
         nativeType = "JSObjectCallAsFunctionCallback"
     )
 }
 
-// TODO: (Ayydxn) Fix and properly add arguments array
 val JSObjectCallAsConstructorCallback = Module.ULTRALIGHT.callback {
     JSObjectRef.p(
         className = "JSObjectCallAsConstructorCallback",
@@ -148,6 +150,7 @@ val JSObjectCallAsConstructorCallback = Module.ULTRALIGHT.callback {
         JSContextRef.p("context"),
         JSObjectRef.p("constructor"),
         AutoSize("arguments")..size_t("argumentCount"),
+        PointerArray(JSValueRef.p, "argument")..JSValueRef.p.p("arguments"),
         JSValueRef.p("exception"),
 
         nativeType = "JSObjectCallAsConstructorCallback"
@@ -188,7 +191,7 @@ val JSStaticValue = struct(Module.ULTRALIGHT, className = "JSStaticValue") {
 }
 
 val JSStaticFunction = struct(Module.ULTRALIGHT, className = "JSStaticFunction") {
-    charASCII.p("name");
+    charASCII.p("name")
     JSObjectCallAsFunctionCallback.p("callAsFunction")
     JSPropertyAttributes.p("attributes")
 }
@@ -215,5 +218,3 @@ val JSClassDefinition = struct(Module.ULTRALIGHT, className = "JSClassDefinition
     JSObjectHasInstanceCallback.p("hasInstance")
     JSObjectConvertToTypeCallback.p("convertToType")
 }
-
-// TODO: (Ayydxn) JS_EXPORT extern const JSClassDefinition kJSClassDefinitionEmpty;
