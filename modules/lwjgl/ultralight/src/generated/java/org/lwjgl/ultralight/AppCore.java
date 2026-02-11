@@ -189,10 +189,6 @@ public class AppCore {
     @NativeType("C_App *")
     public static long ulCreateApp(@NativeType("C_Settings *") long settings, @NativeType("C_Config *") long config) {
         long __functionAddress = Functions.CreateApp;
-        if (CHECKS) {
-            check(settings);
-            check(config);
-        }
         return invokePPP(settings, config, __functionAddress);
     }
 

@@ -58,8 +58,8 @@ val APPCORE = "AppCore".nativeClass(Module.ULTRALIGHT, "AppCore", prefix = "ul",
 
     ULApp.p(
         "CreateApp",
-        ULSettings.p("settings"),
-        ULConfig.p("config")
+        nullable..ULSettings.p("settings"),
+        nullable..ULConfig.p("config")
     )
 
     void(
