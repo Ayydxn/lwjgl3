@@ -192,6 +192,7 @@ public class Ultralight {
             ViewStop                             = apiGetFunctionAddress(ULTRALIGHT, "ulViewStop"),
             ViewFocus                            = apiGetFunctionAddress(ULTRALIGHT, "ulViewFocus"),
             ViewUnfocus                          = apiGetFunctionAddress(ULTRALIGHT, "ulViewUnfocus"),
+            ViewHasFocus                         = apiGetFunctionAddress(ULTRALIGHT, "ulViewHasFocus"),
             ViewHasInputFocus                    = apiGetFunctionAddress(ULTRALIGHT, "ulViewHasInputFocus"),
             ViewFireKeyEvent                     = apiGetFunctionAddress(ULTRALIGHT, "ulViewFireKeyEvent"),
             ViewFireMouseEvent                   = apiGetFunctionAddress(ULTRALIGHT, "ulViewFireMouseEvent"),
@@ -2474,15 +2475,28 @@ public class Ultralight {
         invokePV(view, __functionAddress);
     }
 
+    // --- [ ulViewHasFocus ] ---
+
+    /** {@code bool ulViewHasFocus(C_View * view)} */
+    @NativeType("bool")
+    public static boolean ulViewHasFocus(@NativeType("C_View *") long view) {
+        long __functionAddress = Functions.ViewHasFocus;
+        if (CHECKS) {
+            check(view);
+        }
+        return invokePZ(view, __functionAddress);
+    }
+
     // --- [ ulViewHasInputFocus ] ---
 
-    /** {@code void ulViewHasInputFocus(C_View * view)} */
-    public static void ulViewHasInputFocus(@NativeType("C_View *") long view) {
+    /** {@code bool ulViewHasInputFocus(C_View * view)} */
+    @NativeType("bool")
+    public static boolean ulViewHasInputFocus(@NativeType("C_View *") long view) {
         long __functionAddress = Functions.ViewHasInputFocus;
         if (CHECKS) {
             check(view);
         }
-        invokePV(view, __functionAddress);
+        return invokePZ(view, __functionAddress);
     }
 
     // --- [ ulViewFireKeyEvent ] ---

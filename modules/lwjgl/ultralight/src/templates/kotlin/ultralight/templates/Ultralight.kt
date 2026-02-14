@@ -1154,7 +1154,12 @@ val ULTRALIGHT = "Ultralight".nativeClass(Module.ULTRALIGHT, "Ultralight", prefi
         ULView.p("view")
     )
 
-    void(
+    bool(
+        "ViewHasFocus",
+        ULView.p("view")
+    )
+
+    bool(
         "ViewHasInputFocus",
         ULView.p("view")
     )
