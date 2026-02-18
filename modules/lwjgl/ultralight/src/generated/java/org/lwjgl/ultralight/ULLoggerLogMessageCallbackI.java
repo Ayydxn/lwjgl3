@@ -22,7 +22,7 @@ public interface ULLoggerLogMessageCallbackI extends CallbackI {
         MethodHandles.lookup(),
         apiCreateCIF(
             ffi_type_void,
-            ffi_type_pointer, ffi_type_pointer
+            ffi_type_uint32, ffi_type_pointer
         )
     );
 
@@ -32,12 +32,12 @@ public interface ULLoggerLogMessageCallbackI extends CallbackI {
     @Override
     default void callback(long ret, long args) {
         invoke(
-            memGetAddress(memGetAddress(args)),
+            memGetInt(memGetAddress(args)),
             memGetAddress(memGetAddress(args + POINTER_SIZE))
         );
     }
 
-    /** {@code void (* ULLoggerLogMessageCallback) (ULLogLevel * logLevel, C_String * message)} */
-    void invoke(@NativeType("ULLogLevel *") long logLevel, @NativeType("C_String *") long message);
+    /** {@code void (* ULLoggerLogMessageCallback) (ULLogLevel logLevel, C_String * message)} */
+    void invoke(@NativeType("ULLogLevel") int logLevel, @NativeType("C_String *") long message);
 
 }

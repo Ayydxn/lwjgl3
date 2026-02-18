@@ -369,7 +369,7 @@ val ULLoggerLogMessageCallback = Module.ULTRALIGHT.callback {
     void(
         className = "ULLoggerLogMessageCallback",
 
-        ULLogLevel.p("logLevel"),
+        ULLogLevel("logLevel"),
         ULString.p("message"),
 
         nativeType = "ULLoggerLogMessageCallback"

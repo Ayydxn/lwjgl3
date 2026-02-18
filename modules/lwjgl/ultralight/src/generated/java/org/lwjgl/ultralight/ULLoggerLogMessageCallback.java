@@ -56,7 +56,7 @@ public abstract class ULLoggerLogMessageCallback extends Callback implements ULL
         }
 
         @Override
-        public void invoke(long logLevel, long message) {
+        public void invoke(int logLevel, long message) {
             delegate.invoke(logLevel, message);
         }
 

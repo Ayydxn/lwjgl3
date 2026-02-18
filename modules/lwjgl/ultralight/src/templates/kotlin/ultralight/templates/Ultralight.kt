@@ -1267,7 +1267,7 @@ val ULTRALIGHT = "Ultralight".nativeClass(Module.ULTRALIGHT, "Ultralight", prefi
         bool("needsPaint")
     )
 
-    void(
+    bool(
         "ViewGetNeedsPaint",
         ULView.p("view")
     )

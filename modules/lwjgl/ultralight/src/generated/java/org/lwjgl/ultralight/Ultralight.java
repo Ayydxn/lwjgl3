@@ -2756,13 +2756,14 @@ public class Ultralight {
 
     // --- [ ulViewGetNeedsPaint ] ---
 
-    /** {@code void ulViewGetNeedsPaint(C_View * view)} */
-    public static void ulViewGetNeedsPaint(@NativeType("C_View *") long view) {
+    /** {@code bool ulViewGetNeedsPaint(C_View * view)} */
+    @NativeType("bool")
+    public static boolean ulViewGetNeedsPaint(@NativeType("C_View *") long view) {
         long __functionAddress = Functions.ViewGetNeedsPaint;
         if (CHECKS) {
             check(view);
         }
-        invokePV(view, __functionAddress);
+        return invokePZ(view, __functionAddress);
     }
 
     // --- [ ulViewCreateLocalInspectorView ] ---
