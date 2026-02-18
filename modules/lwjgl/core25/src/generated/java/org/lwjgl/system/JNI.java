@@ -897,8 +897,10 @@ public final class JNI {
         long callJ(MemorySegment __functionAddress, int param0);
         long callJ(MemorySegment __functionAddress, int param0, int param1);
         long callJ(MemorySegment __functionAddress, int param0, int param1, boolean param2, int param3, int param4);
+        long callPJ(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, int param1);
         long callPPJ(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, @FFMNullable @FFMPointer long param1);
         long callPJJ(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, long param1, int param2, int param3);
+        long callPJJJ(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, long param1, long param2);
         long callPN(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0);
         @FFMPointer long callP(MemorySegment __functionAddress);
         @FFMPointer long callP(MemorySegment __functionAddress, int param0);
@@ -1112,7 +1114,9 @@ public final class JNI {
         void callPV(MemorySegment __functionAddress, int param0, boolean param1, int param2, int param3, int param4, @FFMNullable @FFMPointer long param5);
         void callPV(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, int param1, int param2, int param3, int param4, int param5);
         void callJV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, int param4, int param5, long param6);
+        void callPV(MemorySegment __functionAddress, int param0, int param1, double param2, double param3, int param4, int param5, @FFMNullable @FFMPointer long param6);
         void callPV(MemorySegment __functionAddress, int param0, int param1, float param2, float param3, float param4, float param5, @FFMNullable @FFMPointer long param6);
+        void callPV(MemorySegment __functionAddress, int param0, int param1, float param2, float param3, int param4, int param5, @FFMNullable @FFMPointer long param6);
         void callPV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, int param4, int param5, @FFMNullable @FFMPointer long param6);
         void callPV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, int param4, @FFMNullable @FFMPointer long param5, int param6);
         void callPV(MemorySegment __functionAddress, int param0, int param1, int param2, @FFMNullable @FFMPointer long param3, int param4, int param5, int param6);
@@ -1129,6 +1133,8 @@ public final class JNI {
         void callPV(MemorySegment __functionAddress, int param0, float param1, float param2, int param3, int param4, float param5, float param6, int param7, int param8, @FFMNullable @FFMPointer long param9);
         void callPV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, @FFMNullable @FFMPointer long param9);
         void callJV(MemorySegment __functionAddress, long param0, int param1, float param2, float param3, float param4, float param5, float param6, float param7, float param8, float param9, float param10);
+        void callPV(MemorySegment __functionAddress, int param0, int param1, double param2, double param3, int param4, int param5, double param6, double param7, int param8, int param9, @FFMNullable @FFMPointer long param10);
+        void callPV(MemorySegment __functionAddress, int param0, int param1, float param2, float param3, int param4, int param5, float param6, float param7, int param8, int param9, @FFMNullable @FFMPointer long param10);
         void callPV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, @FFMNullable @FFMPointer long param10);
         void callPV(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, int param10);
         void callJV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, long param10, boolean param11);
@@ -1165,6 +1171,7 @@ public final class JNI {
         void callPPV(MemorySegment __functionAddress, int param0, @FFMNullable @FFMPointer long param1, @FFMNullable @FFMPointer long param2, int param3, int param4);
         void callPPV(MemorySegment __functionAddress, @FFMNullable @FFMPointer long param0, int param1, int param2, int param3, @FFMNullable @FFMPointer long param4);
         void callPPV(MemorySegment __functionAddress, int param0, int param1, int param2, int param3, @FFMNullable @FFMPointer long param4, @FFMNullable @FFMPointer long param5);
+        void callPPV(MemorySegment __functionAddress, int param0, int param1, int param2, @FFMNullable @FFMPointer long param3, @FFMNullable @FFMPointer long param4, int param5);
         void callPPV(MemorySegment __functionAddress, int param0, int param1, @FFMNullable @FFMPointer long param2, int param3, int param4, @FFMNullable @FFMPointer long param5);
         void callPPV(MemorySegment __functionAddress, int param0, int param1, @FFMNullable @FFMPointer long param2, @FFMNullable @FFMPointer long param3, int param4, int param5);
         void callPPV(MemorySegment __functionAddress, int param0, @FFMNullable @FFMPointer long param1, @FFMNullable @FFMPointer long param2, int param3, int param4, int param5);
@@ -2204,8 +2211,10 @@ public final class JNI {
     public static long callJ(int param0, long __functionAddress) { return jni.callJ(MemorySegment.ofAddress(__functionAddress), param0); }
     public static long callJ(int param0, int param1, long __functionAddress) { return jni.callJ(MemorySegment.ofAddress(__functionAddress), param0, param1); }
     public static long callJ(int param0, int param1, boolean param2, int param3, int param4, long __functionAddress) { return jni.callJ(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4); }
+    public static long callPJ(long param0, int param1, long __functionAddress) { return jni.callPJ(MemorySegment.ofAddress(__functionAddress), param0, param1); }
     public static long callPPJ(long param0, long param1, long __functionAddress) { return jni.callPPJ(MemorySegment.ofAddress(__functionAddress), param0, param1); }
     public static long callPJJ(long param0, long param1, int param2, int param3, long __functionAddress) { return jni.callPJJ(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3); }
+    public static long callPJJJ(long param0, long param1, long param2, long __functionAddress) { return jni.callPJJJ(MemorySegment.ofAddress(__functionAddress), param0, param1, param2); }
     public static long callPN(long param0, long __functionAddress) { return jni.callPN(MemorySegment.ofAddress(__functionAddress), param0); }
     public static long callP(long __functionAddress) { return jni.callP(MemorySegment.ofAddress(__functionAddress)); }
     public static long callP(int param0, long __functionAddress) { return jni.callP(MemorySegment.ofAddress(__functionAddress), param0); }
@@ -2419,7 +2428,9 @@ public final class JNI {
     public static void callPV(int param0, boolean param1, int param2, int param3, int param4, long param5, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
     public static void callPV(long param0, int param1, int param2, int param3, int param4, int param5, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
     public static void callJV(int param0, int param1, int param2, int param3, int param4, int param5, long param6, long __functionAddress) { jni.callJV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
+    public static void callPV(int param0, int param1, double param2, double param3, int param4, int param5, long param6, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
     public static void callPV(int param0, int param1, float param2, float param3, float param4, float param5, long param6, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
+    public static void callPV(int param0, int param1, float param2, float param3, int param4, int param5, long param6, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
     public static void callPV(int param0, int param1, int param2, int param3, int param4, int param5, long param6, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
     public static void callPV(int param0, int param1, int param2, int param3, int param4, long param5, int param6, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
     public static void callPV(int param0, int param1, int param2, long param3, int param4, int param5, int param6, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6); }
@@ -2436,6 +2447,8 @@ public final class JNI {
     public static void callPV(int param0, float param1, float param2, int param3, int param4, float param5, float param6, int param7, int param8, long param9, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9); }
     public static void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, long param9, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9); }
     public static void callJV(long param0, int param1, float param2, float param3, float param4, float param5, float param6, float param7, float param8, float param9, float param10, long __functionAddress) { jni.callJV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10); }
+    public static void callPV(int param0, int param1, double param2, double param3, int param4, int param5, double param6, double param7, int param8, int param9, long param10, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10); }
+    public static void callPV(int param0, int param1, float param2, float param3, int param4, int param5, float param6, float param7, int param8, int param9, long param10, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10); }
     public static void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, long param10, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10); }
     public static void callPV(long param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, int param10, long __functionAddress) { jni.callPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10); }
     public static void callJV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, long param10, boolean param11, long __functionAddress) { jni.callJV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11); }
@@ -2472,6 +2485,7 @@ public final class JNI {
     public static void callPPV(int param0, long param1, long param2, int param3, int param4, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4); }
     public static void callPPV(long param0, int param1, int param2, int param3, long param4, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4); }
     public static void callPPV(int param0, int param1, int param2, int param3, long param4, long param5, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
+    public static void callPPV(int param0, int param1, int param2, long param3, long param4, int param5, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
     public static void callPPV(int param0, int param1, long param2, int param3, int param4, long param5, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
     public static void callPPV(int param0, int param1, long param2, long param3, int param4, int param5, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
     public static void callPPV(int param0, long param1, long param2, int param3, int param4, int param5, long __functionAddress) { jni.callPPV(MemorySegment.ofAddress(__functionAddress), param0, param1, param2, param3, param4, param5); }
@@ -2740,6 +2754,7 @@ public final class JNI {
     public static native int callPPPI(long param0, int param1, int @Nullable [] param2, long param3, long __functionAddress);
     public static native int callPPPI(long param0, int param1, int @Nullable [] param2, int @Nullable [] param3, long __functionAddress);
     public static native int callPPPI(long param0, int param1, int @Nullable [] param2, long @Nullable [] param3, long __functionAddress);
+    public static native int callPPPI(long param0, int param1, long @Nullable [] param2, long param3, long __functionAddress);
     public static native int callPPPI(long param0, long param1, int param2, int @Nullable [] param3, long __functionAddress);
     public static native int callPPPI(long param0, long param1, int param2, long @Nullable [] param3, long __functionAddress);
     public static native int callPPPI(long param0, long param1, int @Nullable [] param2, int param3, long __functionAddress);
@@ -2929,6 +2944,8 @@ public final class JNI {
     public static native void callPV(int param0, int param1, int param2, boolean param3, int param4, float @Nullable [] param5, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, boolean param3, int param4, int @Nullable [] param5, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, boolean param3, int param4, short @Nullable [] param5, long __functionAddress);
+    public static native void callPV(int param0, int param1, double param2, double param3, int param4, int param5, double @Nullable [] param6, long __functionAddress);
+    public static native void callPV(int param0, int param1, float param2, float param3, int param4, int param5, float @Nullable [] param6, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, double @Nullable [] param6, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, float @Nullable [] param6, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int @Nullable [] param6, long __functionAddress);
@@ -2948,6 +2965,8 @@ public final class JNI {
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, float @Nullable [] param9, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int @Nullable [] param9, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, short @Nullable [] param9, long __functionAddress);
+    public static native void callPV(int param0, int param1, double param2, double param3, int param4, int param5, double param6, double param7, int param8, int param9, double @Nullable [] param10, long __functionAddress);
+    public static native void callPV(int param0, int param1, float param2, float param3, int param4, int param5, float param6, float param7, int param8, int param9, float @Nullable [] param10, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, double @Nullable [] param10, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, float @Nullable [] param10, long __functionAddress);
     public static native void callPV(int param0, int param1, int param2, int param3, int param4, int param5, int param6, int param7, int param8, int param9, int @Nullable [] param10, long __functionAddress);
@@ -2993,6 +3012,7 @@ public final class JNI {
     public static native void callPPV(int param0, int @Nullable [] param1, long param2, int param3, int param4, long __functionAddress);
     public static native void callPPV(long param0, int param1, int param2, int param3, int @Nullable [] param4, long __functionAddress);
     public static native void callPPV(int param0, int param1, int param2, int param3, int @Nullable [] param4, long param5, long __functionAddress);
+    public static native void callPPV(int param0, int param1, int param2, int @Nullable [] param3, int @Nullable [] param4, int param5, long __functionAddress);
     public static native void callPPV(int param0, int param1, long param2, int param3, int param4, float @Nullable [] param5, long __functionAddress);
     public static native void callPPV(int param0, int param1, long param2, int param3, int param4, short @Nullable [] param5, long __functionAddress);
     public static native void callPPV(int param0, int param1, int @Nullable [] param2, long param3, int param4, int param5, long __functionAddress);
