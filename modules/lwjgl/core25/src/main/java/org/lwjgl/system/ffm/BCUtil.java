@@ -121,6 +121,19 @@ final class BCUtil {
         }
     }
 
+    private static <T extends AnnotatedElement> void checkConflictingNullable(FFMConfig config, T element, Function<T, AnnotatedType> annotatedTypeProvider) {
+        if (DEBUG) {
+            var nullableAnnotation = config.nullableAnnotation;
+            if (nullableAnnotation != null) {
+                if (config.nullableAnnotationOnType
+                    ? annotatedTypeProvider.apply(element).isAnnotationPresent(nullableAnnotation)
+                    : element.isAnnotationPresent(nullableAnnotation)) {
+                    throw new IllegalStateException("Cannot use both nullable and @FFMNullable");
+                }
+            }
+        }
+    }
+
     private static void checkFFMNullableOnReference(AnnotatedElement element) {
         if (DEBUG && element.isAnnotationPresent(FFMNullable.class)) {
             throw new IllegalStateException("The FFMNullable annotation can be applied to @FFMPointer long parameters only");
@@ -153,9 +166,35 @@ final class BCUtil {
             return element.isAnnotationPresent(FFMNullable.class);
         }
 
-        var nullableAnnotation = config.nullableAnnotation;
-        checkFFMNullableOnReference(element);
+        /*
+        @FFMNullable @Nullable MemorySegment
+            * fail generation
 
+        @Nullable MemorySegment
+            * null -> swap with MemorySegment.NULL in wrapper
+            * MemorySegment.NULL -> pass as is
+            * non-null -> pass as is
+
+        @FFMNullable MemorySegment
+            * null -> not allowed / NPE
+            * MemorySegment.NULL -> pass as is
+            * non-null -> pass as is
+
+        MemorySegment
+            * null -> not allowed / NPE
+            * MemorySegment.NULL -> fail in check
+            * non-null -> pass as is
+         */
+        if (type == MemorySegment.class) {
+            if (element.isAnnotationPresent(FFMNullable.class)) {
+                checkConflictingNullable(config, element, annotatedTypeProvider);
+                return true;
+            }
+        } else {
+            checkFFMNullableOnReference(element);
+        }
+
+        var nullableAnnotation = config.nullableAnnotation;
         if (nullableAnnotation != null) {
             return config.nullableAnnotationOnType
                 ? annotatedTypeProvider.apply(element).isAnnotationPresent(nullableAnnotation)
@@ -197,15 +236,15 @@ final class BCUtil {
         return cb;
     }
 
-    static <T extends CodeBuilder> T buildGetString(T cb, Method method) {
+    static <T extends CodeBuilder> T buildGetString(T cb, FFMCharset.Type charsetType) {
         cb.lconst_0();
-        buildCharsetInstance(cb, getCharset(method))
+        buildCharsetInstance(cb, charsetType)
             .invokeinterface(CD_MemorySegment, "getString", MTD_String_long_Charset);
         return cb;
     }
 
-    static <T extends CodeBuilder> T buildCharsetInstance(T cb, FFMCharset.Type type) {
-        cb.getstatic(CD_StandardCharsets, type.charset, CD_Charset);
+    static <T extends CodeBuilder> T buildCharsetInstance(T cb, FFMCharset.Type charsetType) {
+        cb.getstatic(CD_StandardCharsets, charsetType.charset, CD_Charset);
         /*if (STANDARD_CHARSETS.contains(charsetName)) {
             cb.getstatic(CD_StandardCharsets, charsetName, CD_Charset);
         } else {
@@ -244,18 +283,12 @@ final class BCUtil {
         return DynamicConstantDesc.ofNamed(BSM_CLASS_DATA_AT, DEFAULT_NAME, constantType, (Integer)index);
     }
 
-    static FFMCharset.Type getCharset(Method method) {
-        var annotation = method.getAnnotation(FFMCharset.class);
+    static FFMCharset.Type getCharsetType(Method method)       { return getCharsetType(method.getAnnotatedReturnType(), method); }
+    static FFMCharset.Type getCharsetType(Parameter parameter) { return getCharsetType(parameter.getAnnotatedType(), parameter.getDeclaringExecutable()); }
+    static FFMCharset.Type getCharsetType(AnnotatedType annotatedType, Executable executable) {
+        var annotation = annotatedType.getAnnotation(FFMCharset.class);
         if (annotation == null) {
-            annotation = method.getDeclaringClass().getAnnotation(FFMCharset.class);
-        }
-        return annotation != null ? annotation.value() : FFMCharset.DEFAULT;
-    }
-
-    static FFMCharset.Type getCharset(Parameter parameter) {
-        var annotation = parameter.getAnnotation(FFMCharset.class);
-        if (annotation == null) {
-            annotation = parameter.getDeclaringExecutable().getDeclaringClass().getAnnotation(FFMCharset.class);
+            annotation = executable.getDeclaringClass().getAnnotation(FFMCharset.class);
         }
         return annotation != null ? annotation.value() : FFMCharset.DEFAULT;
     }

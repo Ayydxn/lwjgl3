@@ -5,7 +5,6 @@
 package org.lwjgl.system.ffm;
 
 import org.jspecify.annotations.*;
-import org.lwjgl.system.*;
 
 import java.lang.classfile.*;
 import java.lang.constant.*;
@@ -64,9 +63,8 @@ final class BCCallDown extends BCCall {
         Class<?> allocatorClass = null;
 
         Linker.Option captureCallState = null;
-        var firstVariadicArg = method.isAnnotationPresent(FFMFirstVariadicArg.class)
-            ? Linker.Option.firstVariadicArg(method.getAnnotation(FFMFirstVariadicArg.class).value())
-            : null;
+
+        var firstVariadicArg = getFirstVariadicArgOption();
 
         var hasTracing   = config.traceConsumer != null && (config.tracingFilter == null || config.tracingFilter.test(method));
         var featureFlags = hasTracing ? FF_TRACING.mask : 0;
@@ -85,7 +83,7 @@ final class BCCallDown extends BCCall {
             if (parameter.getType() == MemorySegment.class) {
                 if (i == 0 && hasFunctionAddress) {
                     if (DEBUG && Arrays.stream(parameter.getAnnotations()).anyMatch(it -> "org.lwjgl.system.ffm".equals(it.annotationType().getPackage().getName()))) {
-                        throw new IllegalStateException("FFMFunctionAddress parameters cannot have FFM annotations.");
+                        throw new IllegalStateException("FFMFunctionAddress parameters cannot have FFM annotations");
                     }
                     continue;
                 }
@@ -93,26 +91,26 @@ final class BCCallDown extends BCCall {
                 var ccs = parameter.getAnnotation(FFMCaptureCallState.class);
                 if (ccs != null) {
                     if (i != (hasFunctionAddress ? 1 : 0) + (allocatorClass != null ? 1 : 0)) {
-                        throw new IllegalStateException("Invalid position of FFMCaptureCallState parameter.");
+                        throw new IllegalStateException("Invalid position of FFMCaptureCallState parameter");
                     }
 
                     captureCallState = Linker.Option.captureCallState(ccs.value());
                     continue;
                 }
             } else if (i == 0 && hasFunctionAddress) {
-                throw new IllegalStateException("Missing FFMFunctionAddress parameter.");
+                throw new IllegalStateException("Missing FFMFunctionAddress parameter");
             }
 
             if (parameter.isAnnotationPresent(FFMFirstVariadicArg.class)) {
                 if (firstVariadicArg != null) {
-                    throw new IllegalStateException("Multiple FFMFirstVariadicArg annotations found.");
+                    throw new IllegalStateException("Multiple FFMFirstVariadicArg annotations found");
                 }
-                firstVariadicArg = Linker.Option.firstVariadicArg(i);
+                firstVariadicArg = Linker.Option.firstVariadicArg(argLayouts.size());
             }
 
             if (SegmentAllocator.class.isAssignableFrom(parameter.getType())) {
                 if (i != (hasFunctionAddress ? 1 : 0)) {
-                    throw new IllegalStateException("Invalid position of SegmentAllocator/Arena parameter.");
+                    throw new IllegalStateException("Invalid position of SegmentAllocator/Arena parameter");
                 }
                 allocatorClass = parameter.getType();
                 // TODO: if a struct is returned or passed by-value?
@@ -121,10 +119,15 @@ final class BCCallDown extends BCCall {
 
             var type = parameter.getType();
             if (isPointerType(parameter, type)) {
-                if (config.checks && !isNullable(config, parameter)) {
+                var nullable = isNullable(config, parameter);
+                if (config.checks && !nullable) {
                     featureFlags |= FF_CHECK.mask; // requires null check
                 }
                 if (BITS32 && type == long.class) {
+                    featureFlags |= FF_TYPE_CONVERSION.mask;
+                }
+                if (type == MemorySegment.class && nullable && !parameter.isAnnotationPresent(FFMNullable.class)) {
+                    // need to convert null MemorySegment to MemorySegment.NULL
                     featureFlags |= FF_TYPE_CONVERSION.mask;
                 }
             } else if (type == String.class) {
@@ -180,11 +183,13 @@ final class BCCallDown extends BCCall {
             if (returnAnnotation != null) {
                 var returnOutputAnnotation = method.getAnnotation(FFMReturn.SizeOut.class);
 
-                // TODO: protect against multiple Size annotations
                 // TODO: validate Size parameter type
                 if (returnOutputAnnotation == null) {
                     for (var parameter : parameters) {
                         if (parameter.isAnnotationPresent(FFMReturn.Size.class)) {
+                            if (resLayout != null) {
+                                throw new IllegalStateException("Multiple @FFMReturn.Size annotations found");
+                            }
                             resLayout = valueLayout(parameter);
                         }
                     }
@@ -229,6 +234,13 @@ final class BCCallDown extends BCCall {
         return
             method.getAnnotation(FFMFunctionAddress.class) != null ||
             method.getDeclaringClass().getAnnotation(FFMFunctionAddress.class) != null;
+    }
+
+    private Linker.@Nullable Option getFirstVariadicArgOption() {
+        var annotation = method.getAnnotation(FFMFirstVariadicArg.class);
+        return annotation != null
+            ? Linker.Option.firstVariadicArg(annotation.value())
+            : null;
     }
 
     private boolean hasJNI() {
@@ -346,10 +358,11 @@ final class BCCallDown extends BCCall {
                                 Opcode ifThenOpcode;
                                 if (type == MemorySegment.class) {
                                     cb
-                                        .getstatic(CD_MemorySegment, "NULL", CD_MemorySegment)
+                                        .lconst_0()
                                         .aload(slot)
-                                        .invokeinterface(CD_MemorySegment, "equals", MTD_boolean_Object);
-                                    ifThenOpcode = Opcode.IFNE;
+                                        .invokeinterface(CD_MemorySegment, "address", MTD_long)
+                                        .lcmp();
+                                    ifThenOpcode = Opcode.IFEQ;
                                 } else if (type == long.class) {
                                     cb
                                         .lconst_0()
@@ -438,6 +451,13 @@ final class BCCallDown extends BCCall {
                                 } else {
                                     buildAllocateFrom(bcb, allocatorSlot, slot, parameter);
                                 }
+                            } else if (type == MemorySegment.class && isNullable(config, parameter) && !parameter.isAnnotationPresent(FFMNullable.class)) {
+                                bcb
+                                    .aload(slot)
+                                    .ifThenElse(Opcode.IFNULL,
+                                        b0 -> b0.getstatic(CD_MemorySegment, "NULL", CD_MemorySegment),
+                                        b1 -> b1.aload(slot)
+                                    );
                             } else if (BITS32 && type == long.class && parameter.isAnnotationPresent(FFMPointer.class)) {
                                 // TODO: test
                                 bcb.lload(slot);
@@ -493,7 +513,7 @@ final class BCCallDown extends BCCall {
                                 returnTransform.buildResult(bcb, methodTypeDesc, method);
                             } else if (type == String.class) {
                                 // Native function returns null-terminated string
-                                buildGetString(bcb, method);
+                                buildGetString(bcb, getCharsetType(method));
                             } else if (type == boolean.class) {
                                 var booleanInt = method.getAnnotation(FFMBooleanInt.class);
                                 if (booleanInt != null && !booleanInt.binary()) {
@@ -711,7 +731,7 @@ final class BCCallDown extends BCCall {
         if (!hasFunctionAddress) {
             var lookup = config.symbolLookup;
             if (lookup == null) {
-                throw new IllegalStateException("The registered FFMConfig does not define a SymbolLookup.");
+                throw new IllegalStateException("The registered FFMConfig does not define a SymbolLookup");
             }
             list.add(lookup
                 .find(nativeName)
@@ -738,7 +758,7 @@ final class BCCallDown extends BCCall {
         cb
             .aload(allocatorSlot)
             .aload(slot);
-        buildCharsetInstance(cb, getCharset(parameter))
+        buildCharsetInstance(cb, getCharsetType(parameter))
             .invokeinterface(CD_SegmentAllocator, "allocateFrom", MTD_MemorySegment_String_Charset);
         return cb;
     }

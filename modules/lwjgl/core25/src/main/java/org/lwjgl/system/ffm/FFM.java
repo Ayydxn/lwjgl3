@@ -141,6 +141,9 @@ public final class FFM {
 
             for (var m = 0; m < methods.length; m++) {
                 var method = methods[m];
+                if (method.isDefault() || Modifier.isStatic(method.getModifiers())) {
+                    continue;
+                }
 
                 var methodTypeDesc = getMethodTypeDesc(method);
 
@@ -216,31 +219,23 @@ public final class FFM {
     }
 
     static FFMConfig.BinderField lookupBinder(FFMConfig config, Class<?> targetType) {
-        var binderField = config.binders.get(targetType);
-        if (binderField == null) {
-            binderField = lookupBinderCacheMiss(config, targetType);
-        }
-        return binderField;
-    }
+        return config.binders.computeIfAbsent(targetType, it -> {
+            var field = findBinderField(it);
 
-    private static FFMConfig.BinderField lookupBinderCacheMiss(FFMConfig config, Class<?> targetType) {
-        var field = findBinderField(targetType);
+            Binder<?> binder;
 
-        Binder<?> binder;
+            try {
+                binder = (Binder<?>)field.get(null);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
-        try {
-            binder = (Binder<?>)field.get(null);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+            if (binder == null) {
+                throw new IllegalStateException("Missing binder field value for " + it);
+            }
 
-        if (binder == null) {
-            throw new IllegalStateException("Missing binder field value for " + targetType);
-        }
-
-        var binderField = new FFMConfig.BinderField(field.getName(), binder);
-        config.binders.put(targetType, binderField);
-        return binderField;
+            return new FFMConfig.BinderField(field.getName(), binder);
+        });
     }
 
     // PUBLIC API (DSL)
@@ -487,7 +482,7 @@ public final class FFM {
         /**
          * Configures the group pack alignment.
          *
-         * <p>By default there's no packing alignment. This option may be used to configure a pack alignment lesser than than the natural member alignment.</p>
+         * <p>By default there's no packing alignment. This option may be used to configure a pack alignment lesser than the natural member alignment.</p>
          *
          * @param alignment the new pack alignment
          *
@@ -496,6 +491,13 @@ public final class FFM {
         public SELF pack(long alignment) {
             this.packAlignment = alignment;
             return self();
+        }
+        protected MemoryLayout pack(MemoryLayout layout) {
+            var layoutAlignment = layout.byteAlignment();
+            if (packAlignment < layoutAlignment) {
+                return layout.withByteAlignment(packAlignment);
+            }
+            return layout;
         }
 
         /**
@@ -604,15 +606,9 @@ public final class FFM {
 
         @Override
         public StructBinderBuilder<T> m(String name, DataMapping<?> mapping) {
-            var layout = mapping.layout();
+            var layout = pack(mapping.layout());
 
             var layoutAlignment = layout.byteAlignment();
-            if (packAlignment < layoutAlignment) {
-                layoutAlignment = packAlignment;
-                layout = sequenceLayout(layout.byteSize(), ValueLayout.JAVA_BYTE)
-                    .withByteAlignment(packAlignment);
-            }
-
             if (automaticPadding && sizeof % layoutAlignment != 0) {
                 padding(align(sizeof, layoutAlignment) - sizeof);
             }
@@ -643,11 +639,9 @@ public final class FFM {
 
         @Override
         public UnionBinderBuilder<T> m(String name, DataMapping<?> mapping) {
-            var layout = mapping.layout();
+            var layout = pack(mapping.layout());
 
-            var layoutAlignment = min(layout.byteAlignment(), packAlignment);
-
-            alignof = max(alignof, layoutAlignment);
+            alignof = max(alignof, layout.byteAlignment());
             sizeof = max(sizeof, layout.byteSize());
 
             return addMember(name, layout);
