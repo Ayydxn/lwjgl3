@@ -696,6 +696,16 @@ enum class Module(
         library = JNILibrary.simple(),
         arrayOverloads = false
     ),
+    ULTRALIGHT("ultralight",
+        "org.lwjgl.ultralight",
+        """
+            Contains bindings to the ${url("https://ultralig.ht/", "Ultralight")} library.
+            
+            Ultralight features detailed documentation which you can read online ${url("https://docs.ultralig.ht/docs/get-started", "here")},
+            as well as an API reference for both its C and C++ APIs ${url("https://ultralig.ht/api/cpp/1_4_0/index.html", "here")}.
+        """.trimIndent(),
+        arrayOverloads = false
+    ),
     VMA(
         "vma",
         "org.lwjgl.util.vma",

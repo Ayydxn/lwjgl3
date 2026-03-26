@@ -68,6 +68,7 @@ This script is included in /config/build-definitions.xml.
     <property name="binding.tinyexr" value="true"/>
     <property name="binding.tinyfd" value="true"/>
     <condition property="binding.tootle" value="false" else="true"><isset property="build.arch.arm"/></condition>
+    <property name="binding.ultralight" value="true"/>
     <property name="binding.vulkan" value="true"/>
     <condition property="binding.vma" value="true" else="false"><istrue value="${binding.vulkan}"/></condition>
     <property name="binding.xxhash" value="true"/>
@@ -140,6 +141,7 @@ This script is included in /config/build-definitions.xml.
                 <sequential if:true="${binding.tinyfd}"><local name="module"/><property name="module" value="tinyfd"/><body/></sequential>
                 <sequential if:true="${binding.tootle}"><local name="module"/><property name="module" value="tootle"/><body/></sequential>
                 <sequential if:true="${binding.vma}"><local name="module"/><property name="module" value="vma"/><body/></sequential>
+                <sequential if:true="${binding.ultralight}"><local name="module"/><property name="module" value="ultralight"/><body/></sequential>
                 <sequential if:true="${binding.vulkan}"><local name="module"/><property name="module" value="vulkan"/><body/></sequential>
                 <sequential if:true="${binding.xxhash}"><local name="module"/><property name="module" value="xxhash"/><body/></sequential>
                 <sequential if:true="${binding.yoga}"><local name="module"/><property name="module" value="yoga"/><body/></sequential>

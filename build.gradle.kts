@@ -281,6 +281,10 @@ enum class Artifacts(
         "A 3D triangle mesh optimization library that improves on existing mesh preprocessing techniques.",
         Platforms.LINUX, Platforms.MACOS, Platforms.WINDOWS, Platforms.WINDOWS_X86
     ),
+    ULTRALIGHT("lwjgl-ultralight", "LWJGL - ULtralight bindings",
+        "Ultralight is a lightweight, cross-platform, GPU-accelerated HTML rendering engine that lets developers embed modern web UIs directly into games and native applications",
+        Platforms.WINDOWS, Platforms.MACOS_ARM64, Platforms.MACOS, Platforms.LINUX, Platforms.LINUX_ARM64
+    ),
     VMA(
         "lwjgl-vma", "LWJGL - Vulkan Memory Allocator bindings",
         "An easy to integrate Vulkan memory allocation library.",
